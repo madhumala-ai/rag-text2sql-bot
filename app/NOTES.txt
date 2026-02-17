@@ -1,0 +1,3 @@
+Indeployment :
+we have removed API gateway has 29 s limit 
+lambda is used to create function url---it is serverless

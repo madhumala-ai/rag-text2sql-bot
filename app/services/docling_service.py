@@ -43,7 +43,7 @@ def convert_document(file_path: str):
 
     try:
         logger.info(f"Converting document with Docling: {Path(file_path).name}")
-        converter = DocumentConverter()
+        converter = DocumentConverter()####parsing is done here
         result = converter.convert(file_path)
         doc = result.document
 

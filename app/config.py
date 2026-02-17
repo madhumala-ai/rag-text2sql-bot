@@ -6,6 +6,8 @@ Loads environment variables from .env file.
 import os
 from pydantic_settings import BaseSettings
 from typing import Optional
+from pydantic import computed_field
+
 
 
 class Settings(BaseSettings):
@@ -24,6 +26,7 @@ class Settings(BaseSettings):
     PINECONE_API_KEY: Optional[str] = None  # Required for vector storage
     PINECONE_ENVIRONMENT: str = "us-east-1-aws"
     PINECONE_INDEX_NAME: str = "rag-cache-docsqa"
+    PINECONE_INDEX_NAME: str = "rag-documents"
 
     # Supabase/PostgreSQL Configuration
     DATABASE_URL: Optional[str] = None  # Required for Text-to-SQL
@@ -52,11 +55,14 @@ class Settings(BaseSettings):
     USE_DOCKLING: bool = True  # Set to False for ARM64 to avoid PyTorch/ONNX errors
 
     # Storage Backend Configuration
-    STORAGE_BACKEND: str = "s3"  # Options: "local", "s3"
-    # UPLOAD_DIR: str = "data/uploads"
-    # CACHE_DIR: str = "data/cached_chunks"
+    #STORAGE_BACKEND: str = "s3"  # Options: "local", "s3"
+    STORAGE_BACKEND: str = "local"  # Options: "local", "s3"
+    #UPLOAD_DIR: str = "data/uploads"
+    #CACHE_DIR: str = "data/cached_chunks"
 
     # Storage paths (auto-detects Lambda environment)
+
+    @computed_field
     @property
     def UPLOAD_DIR(self) -> str:
         # Use /tmp in Lambda/production, data/ locally
@@ -64,6 +70,7 @@ class Settings(BaseSettings):
             return "/tmp/uploads"
         return "data/uploads"
 
+    @computed_field
     @property
     def CACHE_DIR(self) -> str:
         # Use /tmp in Lambda/production, data/ locally
@@ -72,7 +79,8 @@ class Settings(BaseSettings):
         return "data/cached_chunks"
 
     # S3 Storage Configuration (for Lambda deployment)
-    S3_CACHE_BUCKET: str = "rag-cache-docsqa"
+    #S3_CACHE_BUCKET: str = "rag-cache-docsqa"
+    S3_CACHE_BUCKET: str = "my-rag-cache-bucket"
     AWS_REGION: str = "us-east-1"
     # AWS credentials from environment or IAM role (recommended for Lambda)
     # AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are read automatically by boto3
@@ -97,6 +105,7 @@ class Settings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = True
+        extra="ignore"
 
 
 # Global settings instance
