@@ -25,7 +25,8 @@ class Settings(BaseSettings):
     # Pinecone Configuration
     PINECONE_API_KEY: Optional[str] = None  # Required for vector storage
     PINECONE_ENVIRONMENT: str = "us-east-1-aws"
-    PINECONE_INDEX_NAME: str = "rag-cache-docsqa"
+    
+    #PINECONE_INDEX_NAME: str = "rag-cache-docsqa"
     PINECONE_INDEX_NAME: str = "rag-documents"
 
     # Supabase/PostgreSQL Configuration

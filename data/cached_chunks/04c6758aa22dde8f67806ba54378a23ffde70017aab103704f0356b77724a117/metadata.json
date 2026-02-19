@@ -1,0 +1,11 @@
+{
+  "document_id": "04c6758aa22dde8f67806ba54378a23ffde70017aab103704f0356b77724a117",
+  "original_filename": "Hemanth Kumar D.pdf",
+  "upload_timestamp": "2026-02-19T08:06:57.712530Z",
+  "file_size_bytes": 415162,
+  "chunk_count": 4,
+  "embedding_model": "text-embedding-3-small",
+  "chunk_size": 512,
+  "chunk_overlap": 50,
+  "file_extension": "pdf"
+}
