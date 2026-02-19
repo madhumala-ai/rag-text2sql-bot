@@ -21,3 +21,5 @@ Thumbs.db
 .venv/
 .venv/
 .venv/
+.venv/
+.env
