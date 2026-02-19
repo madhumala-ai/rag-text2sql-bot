@@ -134,6 +134,7 @@ class VannaAgentWrapper:
 
         logger.info("✓ Vanna 2.0 Agent initialized successfully")
 
+    ###better to have shema
     async def generate_sql_async(self, question: str, schema_context: str = "") -> str:
         """
         Generate SQL from natural language question (async).
@@ -157,6 +158,7 @@ class VannaAgentWrapper:
         # Extract SQL from Agent
         return await self._extract_sql_from_agent(full_message)
 
+    ##this is the exact code
     async def _extract_sql_from_agent(self, message: str) -> str:
         """
         Extract SQL from Agent's UI components.

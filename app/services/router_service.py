@@ -17,6 +17,7 @@ class QueryRouter:
     """
 
     # Keywords that indicate a SQL/database query
+    ###you can use llm based routing as well, its not available in langchain , available in llamaindex
     SQL_KEYWORDS = [
         # Aggregation keywords
         'how many', 'count', 'total', 'sum', 'average', 'avg', 'mean',

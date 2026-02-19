@@ -1240,3 +1240,4 @@ curl http://localhost:8000/cache/query/stats
 ---
 
 **Built with ❤️ using FastAPI, OpenAI, Pinecone, Vanna.ai, Docling, Upstash Redis, and AWS Lambda**
+# rag-text2sql-bot

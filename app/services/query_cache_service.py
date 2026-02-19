@@ -136,7 +136,8 @@ class QueryCacheService:
 
         try:
             serialized = self._serialize(value)
-            self.client.setex(key, ttl, serialized)
+            self.client.setex(key, ttl, serialized)###all this will be saved in reddis
+
             logger.debug(f"Cache SET: {key} (TTL: {ttl}s)")
             return True
 
