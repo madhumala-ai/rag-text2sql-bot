@@ -87,6 +87,23 @@ jobs:
         run: |
           echo "🔐 Configuring AWS credentials..."
 
+      - name: Debug secrets (REMOVE AFTER TESTING)
+        run: |
+          echo "Checking if secrets are available..."
+          if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+            echo "❌ AWS_ACCESS_KEY_ID is not set!"
+          else
+            echo "✅ AWS_ACCESS_KEY_ID is set (length: ${#AWS_ACCESS_KEY_ID})"
+          fi
+          if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+            echo "❌ AWS_SECRET_ACCESS_KEY is not set!"
+          else
+            echo "✅ AWS_SECRET_ACCESS_KEY is set (length: ${#AWS_SECRET_ACCESS_KEY})"
+          fi
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Configure AWS credentials (action)
         uses: aws-actions/configure-aws-credentials@v4
         with:
