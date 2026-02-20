@@ -318,3 +318,40 @@
 2026-02-19 18:57:04 - rag_app - INFO - [main.py:1372] - API is ready!
 2026-02-19 18:57:04 - rag_app - INFO - [main.py:1373] - ============================================================
 2026-02-19 18:57:53 - rag_app - INFO - [main.py:1388] - Shutting down Multi-Source RAG + Text-to-SQL API...
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1260] - Storage directories initialized: \tmp\uploads, \tmp\cached_chunks
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1262] - ============================================================
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1263] - Starting Multi-Source RAG + Text-to-SQL API...
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1264] - ============================================================
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1265] - Phase 0: Foundation Setup - COMPLETE
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1266] - Phase 1: Document RAG MVP - COMPLETE
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1267] - Phase 2: Text-to-SQL Foundation - COMPLETE
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1268] - Phase 3: Query Routing - COMPLETE
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1269] - Phase 4: Evaluation & Monitoring - COMPLETE
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1270] - Phase 5: Polish & Documentation - COMPLETE
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1271] - Phase 6: Docker Deployment - COMPLETE
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1272] - ============================================================
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1273] - ALL PHASES COMPLETE - PRODUCTION READY!
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1274] - ============================================================
+2026-02-20 12:02:51 - rag_app - INFO - [main.py:1280] - Initializing OPIK monitoring...
+2026-02-20 12:02:52 - rag_app - WARNING - [main.py:1307] - Failed to initialize OPIK: EOF when reading a line
+2026-02-20 12:02:52 - rag_app - INFO - [main.py:1314] - Initializing query cache service (Redis)...
+2026-02-20 12:02:55 - rag_app - INFO - [main.py:1324] - Query cache service initialized but disabled (credentials not configured).
+2026-02-20 12:02:55 - rag_app - INFO - [main.py:1325] - App will continue without query caching. Set UPSTASH_REDIS_URL and UPSTASH_REDIS_TOKEN to enable.
+2026-02-20 12:02:56 - rag_app - INFO - [main.py:1333] - Initializing Document RAG services...
+2026-02-20 12:02:57 - rag_app.vector_service - INFO - [vector_service.py:63] - Connected to Pinecone index: rag-documents
+2026-02-20 12:02:58 - rag_app - INFO - [main.py:1338] - ✓ Document RAG services initialized!
+2026-02-20 12:02:58 - rag_app - INFO - [main.py:1349] - Initializing Text-to-SQL service...
+2026-02-20 12:02:58 - rag_app.sql_service - INFO - [sql_service.py:68] - Configuring SQL LLM with deterministic settings: temperature=0.0, top_p=0.1, seed=42
+2026-02-20 12:02:58 - rag_app.sql_service - INFO - [sql_service.py:115] - Using Pinecone for SQL Agent memory (index: vanna-sql-training)
+2026-02-20 12:02:58 - rag_app.sql_service - INFO - [sql_service.py:135] - ✓ Vanna 2.0 Agent initialized successfully
+2026-02-20 12:02:58 - rag_app - INFO - [main.py:1351] - Training Vanna on database schema and examples...
+2026-02-20 12:02:58 - rag_app.sql_service - INFO - [sql_service.py:344] - Preparing schema context for Vanna 2.0...
+2026-02-20 12:02:58 - rag_app.sql_service - INFO - [sql_service.py:350] - ✓ Schema context prepared for Vanna 2.0 Agent!
+2026-02-20 12:02:58 - rag_app - INFO - [main.py:1353] - ✓ Text-to-SQL service initialized and trained!
+2026-02-20 12:02:58 - rag_app - INFO - [main.py:1364] - Initializing document cache service (S3/local)...
+2026-02-20 12:03:00 - rag_app.cache_service - INFO - [cache_service.py:48] - Using S3 storage (bucket: amzn-s3-rag-cache)
+2026-02-20 12:03:00 - rag_app - INFO - [main.py:1366] - ✓ Document cache service initialized!
+2026-02-20 12:03:00 - rag_app - INFO - [main.py:1371] - ============================================================
+2026-02-20 12:03:00 - rag_app - INFO - [main.py:1372] - API is ready!
+2026-02-20 12:03:00 - rag_app - INFO - [main.py:1373] - ============================================================
+2026-02-20 12:08:42 - rag_app - INFO - [main.py:1388] - Shutting down Multi-Source RAG + Text-to-SQL API...

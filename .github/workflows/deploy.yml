@@ -463,7 +463,7 @@ jobs:
             echo ""
             echo "---"
           else
-            echo "   ⚠️  Info endpoint failed (non-critical, continuing...)"
+            echo "   ⚠️  Info endpoint failed (non-critical, continuing...) "
           fi
 
           echo ""

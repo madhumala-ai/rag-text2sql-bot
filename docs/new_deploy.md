@@ -746,7 +746,9 @@ docker build \
   -t ${ECR_URI}:latest \
   .
 ```
-
+##########
+docker build -f Dockerfile.lambda -t 028699705111.dkr.ecr.us-east-1.amazonaws.com/rag-text-to-sql-server:latest .
+#######
 **This will take 5-10 minutes** depending on your internet speed and CPU.
 
 **Why x86-64?**
@@ -812,6 +814,9 @@ aws lambda create-function \
   --description "Multi-Source RAG + Text-to-SQL API" \
   --region us-east-1
 ```
+#################
+aws lambda create-function --function-name rag-text-to-sql-server --package-type Image --code ImageUri=028699705111.dkr.ecr.us-east-1.amazonaws.com/rag-text-to-sql-server:latest --role arn:aws:iam::028699705111:role/rag-lambda-execution-role --architectures x86_64 --timeout 900 --memory-size 3008 --ephemeral-storage Size=10240 --description "Multi-Source RAG + Text-to-SQL API" --region us-east-1
+##############
 
 **Configuration Explained:**
 - `--function-name`: Name of your Lambda function
@@ -857,6 +862,9 @@ aws lambda get-function \
   --query 'Configuration.{State:State,Memory:MemorySize,Timeout:Timeout,Arch:Architectures[0]}' \
   --output table
 ```
+####
+aws lambda get-function --function-name rag-text-to-sql-server --query 'Configuration.{State:State,Memory:MemorySize,Timeout:Timeout,Arch:Architectures[0]}' --output table
+#########
 
 **Expected output:**
 ```
@@ -920,6 +928,14 @@ aws lambda add-permission \
   --action lambda:InvokeFunction \
   --principal "*"
 ```
+
+########################
+aws lambda add-permission --function-name rag-text-to-sql-server --statement-id FunctionURLInvokeFunctionUrl --action lambda:InvokeFunctionUrl --principal "*" --function-url-auth-type NONE
+
+aws lambda add-permission --function-name rag-text-to-sql-server --statement-id FunctionURLInvokeFunction --action lambda:InvokeFunction --principal "*"
+
+
+########################
 
 **Why two permissions?**
 AWS enhanced security in 2026 to require both `lambda:InvokeFunctionUrl` AND `lambda:InvokeFunction` permissions. Without both, you'll get "403 Forbidden" errors.
