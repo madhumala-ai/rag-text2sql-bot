@@ -327,6 +327,9 @@ aws iam create-role \
   --role-name rag-lambda-execution-role \
   --assume-role-policy-document file:///tmp/lambda-trust-policy.json
 ```
+'''
+aws iam create-role --role-name rag-lambda-execution-role --assume-role-policy-document file://trust-policy.json
+'''
 
 **Expected output:**
 ```json
@@ -352,6 +355,9 @@ aws iam attach-role-policy \
   --role-name rag-lambda-execution-role \
   --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 ```
+'''
+aws iam attach-role-policy --role-name rag-lambda-execution-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+'''
 
 **No output = success!**
 
@@ -382,6 +388,27 @@ cat > /tmp/lambda-s3-policy.json <<'EOF'
 EOF
 ```
 
+######
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::rag-cache-*",
+        "arn:aws:s3:::rag-cache-*/*"
+      ]
+    }
+  ]
+}
+#####
+
 Create and attach the policy:
 
 ```bash
@@ -393,6 +420,9 @@ aws iam attach-role-policy \
   --role-name rag-lambda-execution-role \
   --policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/rag-lambda-s3-access
 ```
+#######
+aws iam create-policy --policy-name rag-lambda-s3-access --policy-document file://s3-cache-policy.json
+aws iam attach-role-policy --role-name rag-lambda-execution-role --policy-arn arn:aws:iam::028699705111:policy/rag-lambda-s3-access
 
 ### 3.2 Add Deployment Permissions to User
 
@@ -461,6 +491,67 @@ cat > /tmp/github-actions-policy.json <<EOF
 }
 EOF
 ```
+############
+@'
+>> {
+>>   "Version": "2012-10-17",
+>>   "Statement": [
+>>     {
+>>       "Sid": "ECRPermissions",
+>>       "Effect": "Allow",
+>>       "Action": [
+>>         "ecr:GetAuthorizationToken",
+>>         "ecr:BatchCheckLayerAvailability",
+>>         "ecr:GetDownloadUrlForLayer",
+>>         "ecr:BatchGetImage",
+>>         "ecr:PutImage",
+>>         "ecr:InitiateLayerUpload",
+>>         "ecr:UploadLayerPart",
+>>         "ecr:CompleteLayerUpload",
+>>         "ecr:DescribeRepositories",
+>>         "ecr:DescribeImages"
+>>       ],
+>>       "Resource": "*"
+>>     },
+>>     {
+>>       "Sid": "LambdaUpdatePermissions",
+>>       "Effect": "Allow",
+>>       "Action": [
+>>         "lambda:UpdateFunctionCode",
+>>         "lambda:UpdateFunctionConfiguration",
+>>         "lambda:GetFunction",
+>>         "lambda:GetFunctionConfiguration"
+>>       ],
+>>       "Resource": "arn:aws:lambda:us-east-1:028699705111:function:rag-text-to-sql-serverless"
+>>     },
+>>     {
+>>       "Sid": "S3TestPermissions",
+>>       "Effect": "Allow",
+>>       "Action": [
+>>         "s3:ListBucket",
+>>         "s3:GetObject",
+>>         "s3:PutObject"
+>>       ],
+>>       "Resource": [
+>>         "arn:aws:s3:::rag-cache-*",
+>>         "arn:aws:s3:::rag-cache-*/*"
+>>       ]
+>>     },
+>>     {
+>>       "Sid": "CloudWatchLogsRead",
+>>       "Effect": "Allow",
+>>       "Action": [
+>>         "logs:DescribeLogGroups",
+>>         "logs:DescribeLogStreams",
+>>         "logs:GetLogEvents",
+>>         "logs:FilterLogEvents"
+>>       ],
+>>       "Resource": "*"
+>>     }
+>>   ]
+>> }
+>> '@ | Set-Content github-actions-policy.json
+############
 
 **Step 2: Create and Attach Policy**
 
@@ -468,6 +559,11 @@ EOF
 aws iam create-policy \
   --policy-name rag-deployment-policy \
   --policy-document file:///tmp/github-actions-policy.json
+
+###
+aws iam create-policy --policy-name github-actions-policy --policy-document file://github-actions-policy.json
+###
+
 
 aws iam attach-user-policy \
   --user-name deployment-user \
@@ -509,6 +605,7 @@ make_bucket: rag-cache-123456789012
 **Step 3: Enable Versioning (Optional but Recommended)**
 
 Versioning allows recovery from accidental deletions:
+###instead of deletion we can go to much cheaper version s3 glacier 
 
 ```bash
 aws s3api put-bucket-versioning \
@@ -543,7 +640,30 @@ aws s3api put-bucket-lifecycle-configuration \
   --bucket ${S3_BUCKET_NAME} \
   --lifecycle-configuration file:///tmp/s3-lifecycle.json
 ```
+#################
+$json = @'
+{
+  "Rules": [
+    {
+      "ID": "DeleteOldCache",
+      "Status": "Enabled",
+      "Filter": {},
+      "Expiration": {
+        "Days": 30
+      },
+      "NoncurrentVersionExpiration": {
+        "NoncurrentDays": 7
+      }
+    }
+  ]
+}
+'@
 
+[System.IO.File]::WriteAllText("$PWD\s3-lifecycle.json", $json, (New-Object System.Text.UTF8Encoding($false)))
+
+aws s3api put-bucket-lifecycle-configuration --bucket amzn-s3-rag-cache --lifecycle-configuration file://s3-lifecycle.json
+
+#################
 **Step 5: Verify Bucket**
 
 ```bash
@@ -681,6 +801,7 @@ Now we can create the Lambda function using the Docker image.
 ```bash
 aws lambda create-function \
   --function-name rag-text-to-sql-serverless \
+  ###its rag-text-to-sql-server in code
   --package-type Image \
   --code ImageUri=${ECR_URI}:amd64 \
   --role arn:aws:iam::${AWS_ACCOUNT_ID}:role/rag-lambda-execution-role \
